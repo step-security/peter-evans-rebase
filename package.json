@@ -1,0 +1,59 @@
+{
+  "name": "rebase",
+  "version": "4.0.0",
+  "private": true,
+  "description": "Rebase pull requests in a repository",
+  "main": "lib/main.js",
+  "engines": {
+    "node": ">=24.4.0"
+  },
+  "scripts": {
+    "vendor": "rm -rf src/vendor/checkout && git clone --depth=1 --branch=v2.5.0 http://github.com/actions/checkout src/vendor/checkout && rm -rf src/vendor/checkout/.git",
+    "clean": "rm -rf node_modules package-lock.json",
+    "build-checkout": "tsc -p src/vendor/checkout",
+    "build": "npm run build-checkout && tsc && ncc build",
+    "format": "prettier --write '**/*.ts'",
+    "format-check": "prettier --check '**/*.ts'",
+    "lint": "eslint src/**/*.ts",
+    "test": "jest unit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/step-security/peter-evans-rebase.git"
+  },
+  "keywords": [
+    "actions",
+    "pull",
+    "rebase"
+  ],
+  "author": "step-security",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/step-security/peter-evans-rebase/issues"
+  },
+  "homepage": "https://github.com/step-security/peter-evans-rebase#readme",
+  "dependencies": {
+    "@actions/core": "^1.10.0",
+    "@actions/io": "^1.1.2",
+    "@octokit/core": "^4.2.4",
+    "axios": "^1.20.0",
+    "checkout": "file:src/vendor/checkout",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.23",
+    "@types/node": "^15.6.1",
+    "@typescript-eslint/eslint-plugin": "^4.31.2",
+    "@typescript-eslint/parser": "^4.25.0",
+    "@vercel/ncc": "^0.45.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-prettier": "^4.0.0",
+    "jest": "^27.0.1",
+    "jest-circus": "^27.0.1",
+    "prettier": "^2.3.0",
+    "ts-jest": "^27.0.1",
+    "typescript": "^4.3.2"
+  }
+}

@@ -1,0 +1,34 @@
+name: 'Rebase Pulls'
+description: 'Rebase pull requests in a repository'
+inputs:
+  token:
+    description: 'GitHub auth token'
+    default: ${{ github.token }}
+  repository:
+    description: 'The target GitHub repository'
+    default: ${{ github.repository }}
+  head:
+    description: >
+      Filter pull requests by head user or head organization and branch name in the format user:ref-name or organization:ref-name.
+      For example: github:new-script-format or octocat:test-branch.
+  base:
+    description: >
+      Filter pull requests by base branch name.
+      Example: gh-pages.
+  include-labels:
+    description: >
+      A comma or newline separated list of pull request labels to include.
+      Allows any labels if unspecified.
+  exclude-labels:
+    description: 'A comma or newline separated list of pull request labels to exclude'
+  exclude-drafts:
+    description: 'Exclude draft pull requests'
+    default: false
+  rebase-options:
+    description: 'A comma or newline separated list of options to pass to the git rebase command. For example, `-Xtheirs`.'
+runs:
+  using: 'node24'
+  main: 'dist/index.js'
+branding:
+  icon: 'git-pull-request'
+  color: 'gray-dark'
