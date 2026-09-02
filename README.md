@@ -1,1 +1,153 @@
-# peter-evans-rebase
+[![StepSecurity Maintained Action](https://raw.githubusercontent.com/step-security/maintained-actions-assets/main/assets/maintained-action-banner.png)](https://docs.stepsecurity.io/actions/stepsecurity-maintained-actions)
+
+# Rebase
+[![CI](https://github.com/step-security/peter-evans-rebase/workflows/CI/badge.svg)](https://github.com/step-security/peter-evans-rebase/actions?query=workflow%3ACI)
+
+A GitHub action to rebase pull requests in a repository.
+
+## Usage
+
+The default behaviour of the action with no configured inputs is to check the current repository for rebaseable pull requests and rebase them.
+Pull requests from forks are rebaseable only if they [allow edits from maintainers](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/allowing-changes-to-a-pull-request-branch-created-from-a-fork).
+
+```yml
+      - uses: step-security/peter-evans-rebase@v4
+```
+
+### Periodically rebase all pull requests
+
+The simplest way to use this action is to schedule it to run periodically.
+
+```yml
+name: Rebase
+on:
+  schedule:
+    - cron:  '0 0 * * *'
+jobs:
+  rebase:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: step-security/peter-evans-rebase@v4
+```
+
+### Rebase all pull requests on push to the base branch
+
+```yml
+name: Rebase
+on:
+  push:
+    branches: [main]
+jobs:
+  rebase:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: step-security/peter-evans-rebase@v4
+        with:
+          base: main
+```
+
+### Exclude pull requests with specific labels
+
+```yml
+      - uses: step-security/peter-evans-rebase@v4
+        with:
+          exclude-labels: |
+            no-rebase
+            dependencies
+```
+
+### Exclude pull request forks with head filter
+
+```yml
+      - uses: step-security/peter-evans-rebase@v4
+        with:
+          head: 'my-org:*'
+```
+
+### Action inputs
+
+| Name | Description | Default |
+| --- | --- | --- |
+| `token` | `GITHUB_TOKEN` or a `repo` scoped [PAT](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token). The `workflow` scope may also be required if rebasing pull requests containing changes to workflows under `.github/workflows`. | `GITHUB_TOKEN` |
+| `repository` | The target GitHub repository containing the pull request. | `github.repository` (Current repository) |
+| `head` | Filter pull requests by head user or head organization and branch name in the format `user:ref-name` or `organization:ref-name`. Use the `*` wildcard match any ref. e.g. `my-org:new-script-format` or `octocat:*`. | |
+| `base` | Filter pull requests by base branch name. Example: `gh-pages`. | |
+| `include-labels` | A comma or newline separated list of pull request labels to include. Allows any labels if unspecified. | |
+| `exclude-labels` | A comma or newline separated list of pull request labels to exclude. | |
+| `exclude-drafts` | Exclude draft pull requests. | `false` |
+| `rebase-options` | A comma or newline separated list of options to pass to the git rebase command. For example, `-Xtheirs`. | |
+
+### Rebase slash command
+
+Use the following two workflows and a `repo` scoped [PAT](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) to add a `/rebase` slash command to pull request comments.
+The [slash-command-dispatch](https://github.com/step-security/slash-command-dispatch) action makes sure that the command is only executable by users with `write` access to the repository.
+
+```yml
+name: Slash Command Dispatch
+on:
+  issue_comment:
+    types: [created]
+jobs:
+  slashCommandDispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Slash Command Dispatch
+        uses: step-security/slash-command-dispatch@v5
+        with:
+          token: ${{ secrets.PAT }}
+          commands: rebase
+          permission: write
+          issue-type: pull-request
+```
+
+```yml
+name: rebase-command
+on:
+  repository_dispatch:
+    types: [rebase-command]
+jobs:
+  rebase:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: step-security/peter-evans-rebase@v4
+        id: rebase
+        with:
+          head: ${{ github.event.client_payload.pull_request.head.label }}
+      - name: Add reaction
+        if: steps.rebase.outputs.rebased-count == 1
+        uses: step-security/create-or-update-comment@v5
+        with:
+          token: ${{ secrets.PAT }}
+          repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
+          comment-id: ${{ github.event.client_payload.github.payload.comment.id }}
+          reaction-type: hooray
+```
+
+### Target other repositories
+
+You can rebase requests in another repository by using a `repo` scoped [PAT](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) instead of `GITHUB_TOKEN`.
+The user associated with the PAT must have write access to the repository.
+
+This example targets multiple repositories.
+
+```yml
+name: Rebase
+on:
+  schedule:
+    - cron:  '0 0 * * *'
+jobs:
+  rebase:
+    strategy:
+      matrix:
+        repo: ['my-org/repo1', 'my-org/repo2', 'my-org/repo3']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: step-security/peter-evans-rebase@v4
+        with:
+          token: ${{ secrets.PAT }}
+          repository: ${{ matrix.repo }}
+```
+
+## License
+
+[MIT](LICENSE)
