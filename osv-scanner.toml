@@ -1,0 +1,35 @@
+[[IgnoredVulns]]
+id = "GHSA-h5c3-5r3r-rr8q"
+reason = "Transitive dependency via vendored checkout -> @actions/github -> @octokit/rest. Not directly used by this action."
+
+[[IgnoredVulns]]
+id = "GHSA-rmvr-2pp2-xj38"
+reason = "Transitive internal dep of @octokit/core. Action only calls octokit.graphql(); the vulnerable request-redirect path is not reachable."
+
+[[IgnoredVulns]]
+id = "GHSA-xx4v-prfh-6cgc"
+reason = "Transitive internal dep of @octokit/core and vendored checkout. @octokit/request-error classes are never directly instantiated by this action."
+
+[[IgnoredVulns]]
+id = "GHSA-vpq2-c234-7xj6"
+reason = "Dev-only dependency via jest -> jsdom -> http-proxy-agent. Not included in the production bundle."
+
+[[IgnoredVulns]]
+id = "GHSA-p6mc-m468-83gw"
+reason = "Transitive dependency via vendored checkout -> @actions/github -> @octokit/rest. lodash.set is never called directly by this action."
+
+[[IgnoredVulns]]
+id = "GHSA-3xgq-45jj-v275"
+reason = "Transitive dependency in vendored checkout. cross-spawn is not directly imported by this action's source code."
+
+[[IgnoredVulns]]
+id = "GHSA-r683-j2x4-v87g"
+reason = "Transitive dependency in vendored checkout. node-fetch is not directly imported by this action's source code."
+
+[[IgnoredVulns]]
+id = "GHSA-c2qf-rxjj-qqgw"
+reason = "Transitive dependency in vendored checkout via @actions/tool-cache. semver is not directly imported by this action's source code."
+
+[[IgnoredVulns]]
+id = "GHSA-w5hq-g745-h8pq"
+reason = "uuid in vendored checkout (v3.3.3) is a frozen third-party dependency not maintained by this action."

@@ -1,0 +1,31 @@
+[[IgnoredVulns]]
+id = "GHSA-h5c3-5r3r-rr8q"
+reason = "Transitive dependency via @actions/github -> @octokit/rest. Not directly used by this action."
+
+[[IgnoredVulns]]
+id = "GHSA-rmvr-2pp2-xj38"
+reason = "Transitive internal dep of @octokit/core and @actions/github. Not directly imported by this action's source code."
+
+[[IgnoredVulns]]
+id = "GHSA-xx4v-prfh-6cgc"
+reason = "Transitive internal dep of @octokit/core and @octokit/rest. @octokit/request-error classes are never directly instantiated by this action."
+
+[[IgnoredVulns]]
+id = "GHSA-3xgq-45jj-v275"
+reason = "Transitive dependency. cross-spawn is not directly imported by this action's source code."
+
+[[IgnoredVulns]]
+id = "GHSA-p6mc-m468-83gw"
+reason = "Transitive dependency via @actions/github -> @octokit/rest. lodash.set is never called directly by this action."
+
+[[IgnoredVulns]]
+id = "GHSA-r683-j2x4-v87g"
+reason = "Transitive dependency. node-fetch is not directly imported by this action's source code."
+
+[[IgnoredVulns]]
+id = "GHSA-c2qf-rxjj-qqgw"
+reason = "Transitive dependency via @actions/tool-cache. semver is not directly imported by this action's source code."
+
+[[IgnoredVulns]]
+id = "GHSA-w5hq-g745-h8pq"
+reason = "Vendored frozen third-party dependency. uuid is used only for generating unique git remote identifiers, not for security-sensitive purposes."
