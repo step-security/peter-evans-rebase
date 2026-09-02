@@ -35,7 +35,7 @@
   "dependencies": {
     "@actions/core": "^2.0.0",
     "@actions/io": "^1.1.2",
-    "@octokit/core": "^4.2.4",
+    "@octokit/core": "^7.0.7",
     "axios": "^1.20.0",
     "checkout": "file:src/vendor/checkout",
     "uuid": "^9.0.0"
